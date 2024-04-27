@@ -2251,10 +2251,10 @@ body {
             const currentQuestion = questions[currentQuestionIndex];
             if (answerInput === currentQuestion.jawaban) {
                 correctCount++;
-                alert('✅');
+                alert('✅ Jawaban Benar!');
             } else {
                 wrongCount++;
-                alert('❌');
+                alert('❌ Jawaban Salah!');
             }
             updateScoreDisplay();
             nextQuestion();
