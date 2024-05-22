@@ -9,7 +9,7 @@
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #4B0082; /* Warna semi-ungu */
+            background-color: #4B0082;
             color: #fff;
             min-height: 100vh;
             display: flex;
@@ -136,10 +136,8 @@
             <h2>Lengkapi Data</h2>
             <form id="dataForm">
                 <input type="hidden" id="selectedPaket">
-                <label for="nama">Nama:</label>
-                <input type="text" id="nama" name="nama" required>
-                <label for="umur">Umur:</label>
-                <input type="number" id="umur" name="umur" required>
+                <label for="nama">Username:</label>
+                <input type="text" id="nama" name="username" required>
                 <label for="pembayaran">Pembayaran:</label>
                 <select id="pembayaran" name="pembayaran" required>
                     <option value="DANA">DANA</option>
@@ -159,7 +157,7 @@
         async function getHargaDasar() {
             return new Promise((resolve) => {
                 setTimeout(() => {
-                    resolve(10000);
+                    resolve(1000);
                 }, 1000);
             });
         }
@@ -211,24 +209,15 @@
         function submitForm() {
             const paket = document.getElementById('selectedPaket').value;
             const nama = document.getElementById('nama').value;
-            const umur = document.getElementById('umur').value;
             const pembayaran = document.getElementById('pembayaran').value;
 
-            const formData = `Paket: ${paket}\nNama: ${nama}\nUmur: ${umur}\nPembayaran: ${pembayaran}`;
+            const formData = `cratepanels ${paket} ${nama} ${pembayaran}`;
             document.getElementById('formDataOutput').value = formData;
-        }
-
-        function copyToClipboard() {
-            const formDataOutput = document.getElementById('formDataOutput');
-            formDataOutput.select();
-            formDataOutput.setSelectionRange(0, 99999);
-            document.execCommand('copy');
-            alert('Data disalin ke clipboard');
         }
 
         function openWhatsApp() {
             const formDataOutput = document.getElementById('formDataOutput').value;
-            const waLink = `https://wa.me/6285179937370?text=${encodeURIComponent(formDataOutput)}`;
+            const waLink = `https://wa.me/6287895943737?text=${encodeURIComponent(formDataOutput)}`;
             window.open(waLink, '_blank');
         }
 
@@ -237,4 +226,4 @@
         });
     </script>
 </body>
-    </html>
+</html>
