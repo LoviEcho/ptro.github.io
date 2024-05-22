@@ -1,13 +1,154 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Space Invaders: Penjaga Bumi</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Daftar Paket Data</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #4B0082; /* Warna semi-ungu */
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .overlay {
+            width: 100%;
+            max-width: 1200px;
+            padding: 20px;
+            background-color: rgba(0, 0, 0, 0.5);
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        h1 {
+            color: #fff;
+            margin-bottom: 20px;
+        }
+
+        #paketDataContainer {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .paket-card {
+            background-color: #fff;
+            color: #333;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 200px;
+            text-align: center;
+            transition: transform 0.2s;
+        }
+
+        .paket-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .paket-card h2 {
+            margin: 0;
+            color: #007bff;
+        }
+
+        .paket-card p {
+            margin: 10px 0;
+            color: #666;
+        }
+
+        .paket-card button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            padding: 10px 15px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .paket-card button:hover {
+            background-color: #0056b3;
+        }
+    </style>
 </head>
 <body>
-    <canvas id="gameCanvas"></canvas>
-    <script src="script.js"></script>
+    <div class="overlay">
+        <h1>Daftar Paket Data</h1>
+        <div id="paketDataContainer"></div>
+    </div>
+    <script>
+        // Fungsi async untuk mendapatkan harga dasar dari sumber eksternal
+        async function getHargaDasar() {
+            // Simulasi panggilan API dengan harga dasar Rp 10.000
+            return new Promise((resolve) => {
+                setTimeout(() => {
+                    resolve(10000);
+                }, 1000); // Simulasi penundaan 1 detik
+            });
+        }
+
+        // Fungsi async untuk membuat daftar paket data dan harga
+        async function buatDaftarPaketData(jumlahGBMaks) {
+            const hargaDasar = await getHargaDasar();
+            const daftarPaket = [];
+
+            for (let i = 1; i <= jumlahGBMaks; i++) {
+                const harga = hargaDasar * i;
+                daftarPaket.push({ paket: `${i}GB`, harga: harga });
+            }
+
+            // Menambahkan paket Unlimited
+            const hargaUnlimited = hargaDasar * 10;
+            daftarPaket.push({ paket: `Unlimited`, harga: hargaUnlimited });
+
+            return daftarPaket;
+        }
+
+        // Fungsi untuk menampilkan daftar paket dan harga di HTML
+        async function tampilkanPaketData() {
+            const paketData = await buatDaftarPaketData(9);
+
+            const container = document.getElementById('paketDataContainer');
+            container.innerHTML = ''; // Mengosongkan kontainer
+
+            paketData.forEach(paket => {
+                const paketElement = document.createElement('div');
+                paketElement.className = 'paket-card';
+
+                const paketTitle = document.createElement('h2');
+                paketTitle.textContent = paket.paket;
+
+                const paketPrice = document.createElement('p');
+                paketPrice.textContent = `Harga: Rp ${paket.harga}`;
+
+                const linkButton = document.createElement('button');
+                linkButton.textContent = 'Beli';
+                linkButton.onclick = () => {
+                    window.location.href = `https://example.com/${paket.paket.toLowerCase()}`;
+                };
+
+                paketElement.appendChild(paketTitle);
+                paketElement.appendChild(paketPrice);
+                paketElement.appendChild(linkButton);
+                container.appendChild(paketElement);
+            });
+        }
+
+        // Memanggil fungsi untuk menampilkan paket data saat halaman dimuat
+        document.addEventListener('DOMContentLoaded', () => {
+            tampilkanPaketData();
+        });
+    </script>
 </body>
-</html>
+    </html>
