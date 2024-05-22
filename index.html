@@ -80,6 +80,49 @@
         .paket-card button:hover {
             background-color: #0056b3;
         }
+
+        #formOverlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            justify-content: center;
+            align-items: center;
+        }
+
+        #formContainer {
+            background-color: #fff;
+            color: #333;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        #formContainer input,
+        #formContainer select {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+
+        #formContainer button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            padding: 10px 15px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        #formContainer button:hover {
+            background-color: #0056b3;
+        }
     </style>
 </head>
 <body>
@@ -87,18 +130,42 @@
         <h1>Daftar Paket Data</h1>
         <div id="paketDataContainer"></div>
     </div>
+
+    <div id="formOverlay">
+        <div id="formContainer">
+            <h2>Lengkapi Data</h2>
+            <form id="dataForm">
+                <input type="hidden" id="selectedPaket">
+                <label for="nama">Nama:</label>
+                <input type="text" id="nama" name="nama" required>
+                <label for="umur">Umur:</label>
+                <input type="number" id="umur" name="umur" required>
+                <label for="pembayaran">Pembayaran:</label>
+                <select id="pembayaran" name="pembayaran" required>
+                    <option value="DANA">DANA</option>
+                    <option value="GoPay">GoPay</option>
+                    <option value="OVO">OVO</option>
+                </select>
+                <button type="button" onclick="submitForm()">Submit</button>
+            </form>
+            <br>
+            <textarea id="formDataOutput" readonly rows="4" style="width: 100%;"></textarea>
+            <br>
+            <button onclick="copyToClipboard()">Salin</button>
+            <br><br>
+            <button onclick="openWhatsApp()">Kirim ke WhatsApp</button>
+        </div>
+    </div>
+
     <script>
-        // Fungsi async untuk mendapatkan harga dasar dari sumber eksternal
         async function getHargaDasar() {
-            // Simulasi panggilan API dengan harga dasar Rp 10.000
             return new Promise((resolve) => {
                 setTimeout(() => {
                     resolve(10000);
-                }, 1000); // Simulasi penundaan 1 detik
+                }, 1000);
             });
         }
 
-        // Fungsi async untuk membuat daftar paket data dan harga
         async function buatDaftarPaketData(jumlahGBMaks) {
             const hargaDasar = await getHargaDasar();
             const daftarPaket = [];
@@ -108,19 +175,16 @@
                 daftarPaket.push({ paket: `${i}GB`, harga: harga });
             }
 
-            // Menambahkan paket Unlimited
             const hargaUnlimited = hargaDasar * 10;
             daftarPaket.push({ paket: `Unlimited`, harga: hargaUnlimited });
 
             return daftarPaket;
         }
 
-        // Fungsi untuk menampilkan daftar paket dan harga di HTML
         async function tampilkanPaketData() {
             const paketData = await buatDaftarPaketData(9);
-
             const container = document.getElementById('paketDataContainer');
-            container.innerHTML = ''; // Mengosongkan kontainer
+            container.innerHTML = '';
 
             paketData.forEach(paket => {
                 const paketElement = document.createElement('div');
@@ -135,7 +199,8 @@
                 const linkButton = document.createElement('button');
                 linkButton.textContent = 'Beli';
                 linkButton.onclick = () => {
-                    window.location.href = `https://example.com/${paket.paket.toLowerCase()}`;
+                    document.getElementById('selectedPaket').value = paket.paket;
+                    document.getElementById('formOverlay').style.display = 'flex';
                 };
 
                 paketElement.appendChild(paketTitle);
@@ -145,10 +210,33 @@
             });
         }
 
-        // Memanggil fungsi untuk menampilkan paket data saat halaman dimuat
+        function submitForm() {
+            const paket = document.getElementById('selectedPaket').value;
+            const nama = document.getElementById('nama').value;
+            const umur = document.getElementById('umur').value;
+            const pembayaran = document.getElementById('pembayaran').value;
+
+            const formData = `Paket: ${paket}\nNama: ${nama}\nUmur: ${umur}\nPembayaran: ${pembayaran}`;
+            document.getElementById('formDataOutput').value = formData;
+        }
+
+        function copyToClipboard() {
+            const formDataOutput = document.getElementById('formDataOutput');
+            formDataOutput.select();
+            formDataOutput.setSelectionRange(0, 99999);
+            document.execCommand('copy');
+            alert('Data disalin ke clipboard');
+        }
+
+        function openWhatsApp() {
+            const formDataOutput = document.getElementById('formDataOutput').value;
+            const waLink = `https://wa.me/6287895943737?text=${encodeURIComponent(formDataOutput)}`;
+            window.open(waLink, '_blank');
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
             tampilkanPaketData();
         });
     </script>
 </body>
-    </html>
+</html>
